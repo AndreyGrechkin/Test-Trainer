@@ -21,4 +21,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "TestTrainer"
 include(":app")
+include(":data")
+include(":domain")
+include(":presentation")
  
