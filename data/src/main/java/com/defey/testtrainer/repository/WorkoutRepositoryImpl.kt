@@ -17,11 +17,21 @@ class WorkoutRepositoryImpl @Inject constructor(
     private val responseHandler: ApiResponseHandler,
 ) : WorkoutRepository {
 
+    private val cache = mutableMapOf<String, IntervalTimer>()
+
     override suspend fun getWorkout(id: String): NetworkResult<IntervalTimer> =
         withContext(Dispatchers.IO) {
             return@withContext responseHandler.handleApiCall { api.getWorkout(id) }
-                .mapSuccess { it.timer.toIntervalTimer() }
+                .mapSuccess {
+                    val workout =  it.timer.toIntervalTimer()
+                    val cached = cache[id]
+                    if (cached != null) return@mapSuccess cached
+                    cache[id] = workout
+                    return@mapSuccess workout
+                }
         }
+
+    override fun getWorkoutCached(id: String): IntervalTimer? = cache[id]
 
     private fun IntervalTimersDto.toIntervalTimer(): IntervalTimer =
         IntervalTimer(

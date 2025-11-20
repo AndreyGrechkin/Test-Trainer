@@ -1,14 +1,14 @@
 package com.defey.testtrainer.ui.workout
 
-import com.defey.testtrainer.Workout
+import com.defey.testtrainer.models.IntervalTimer
 
 class WorkoutUiContract {
 
     data class WorkoutState(
-        val name: String = "",
-        val workoutInterval: Workout? = null,
+        val workoutInterval: IntervalTimer? = null,
         val currentIntervalIndex: Int = 0,
         val isRunning: Boolean = false,
+        val currentTimeLeft: Int = 0,
     )
 
     sealed interface WorkoutEvent {

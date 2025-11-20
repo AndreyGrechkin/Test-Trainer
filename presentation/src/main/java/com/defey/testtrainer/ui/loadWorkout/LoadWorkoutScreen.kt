@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 
+// TODO: 'экран сгенерирован с помощью AI'
 @Composable
 fun LoadWorkoutScreen(
     viewModel: LoadWorkoutViewModel = hiltViewModel(),
@@ -28,7 +29,7 @@ fun LoadWorkoutScreen(
 
     val state by viewModel.state.collectAsState()
 
-
+// TODO: 'все названия вынести в ресурсы'
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.Center,

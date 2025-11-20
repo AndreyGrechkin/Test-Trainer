@@ -3,7 +3,7 @@ package com.defey.testtrainer.ui.loadWorkout
 class LoadWorkoutUiContract {
 
     data class LoadState(
-        val id: String = "",
+        val id: String = "68",
         val isLoading: Boolean = false,
     )
 
