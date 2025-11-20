@@ -1,10 +1,15 @@
 package com.defey.testtrainer.ui.loadWorkout
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.defey.testtrainer.base.BaseContract
 import com.defey.testtrainer.navigation.AppRouter
 import com.defey.testtrainer.navigation.Screen
+import com.defey.testtrainer.repository.WorkoutRepository
+import com.defey.testtrainer.utils.finally
+import com.defey.testtrainer.utils.onError
+import com.defey.testtrainer.utils.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoadWorkoutViewModel@Inject constructor(
     private val router: AppRouter,
+    private val repository: WorkoutRepository
     ): ViewModel(), BaseContract<LoadWorkoutUiContract.LoadState, LoadWorkoutUiContract.LoadEvent> {
 
     private val _state = MutableStateFlow(LoadWorkoutUiContract.LoadState())
@@ -34,9 +40,14 @@ class LoadWorkoutViewModel@Inject constructor(
     private fun loadingWorkout() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            delay(2000)
-            _state.update { it.copy(isLoading = false) }
-            router.navigateTo(Screen.Workout(state.value.id))
+            repository.getWorkout(state.value.id).onSuccess { response ->
+                Log.d("MyLog", "response: $response")
+                router.navigateTo(Screen.Workout(state.value.id))
+            }.onError { message, code ->
+                Log.d("MyLog", "error: $message")
+            }.finally {
+                _state.update { it.copy(isLoading = false) }
+            }
         }
     }
 
